@@ -1,0 +1,8 @@
+<launch>
+  <arg name="gui" default="true"/>
+  <include file="$(find stella_nav_launch)/launch/scan_to_cloud.launch"/>
+  <include file="$(find stella_nav_launch)/launch/tf.launch"/>
+  <include file="$(find stella_nav_launch)/launch/world.launch">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+</launch>

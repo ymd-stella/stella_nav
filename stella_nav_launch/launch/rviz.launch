@@ -1,0 +1,6 @@
+<launch>
+  <arg name="rviz_file" default="$(find stella_nav_launch)/samples/navigation.rviz.sample" />
+  <node pkg="rviz" type="rviz" name="rviz_stella_nav" args="-d $(arg rviz_file)">
+    <remap from="/move_base_simple/goal" to="/stella_nav/goal" />
+  </node>
+</launch>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>stella_nav_launch</name>
+  <version>0.0.0</version>
+  <description>launch files for testing stella_nav packages</description>
+  <maintainer email="world.applepie@gmail.com">ymd-stella</maintainer>
+  <license>BSD</license>
+  <author>ymd-stella</author>
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+  </export>
+</package>

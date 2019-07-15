@@ -1,0 +1,429 @@
+start_nearest_goal: false
+recognizer_plugin_modules: [stella_nav_recognizer]
+planner_plugin_modules:
+  - stella_nav_planning.global_planner
+  - stella_nav_planning.local_planner
+costmap_plugin_modules: [stella_nav_costmap.gridmap2d]
+listener_plugin_modules: [stella_nav_listener]
+observer_plugin_modules: [stella_nav_observer]
+handler_plugin_modules: [stella_nav_handler]
+costmaps:
+  robot_costmap:
+    type: GridMap2D
+    size: [1000, 1000]
+    resolution: 0.02
+    inflation_distance_radius_m: 0.500
+    inflation_lethal_radius_m: 0.18
+  # goal_costmap:
+  #   type: GridMap2D
+  #   size: [1000, 1000]
+  #   resolution: 0.02
+  #   inflation_distance_radius_m: 0.500
+  #   inflation_lethal_radius_m: 0.18
+  #   inflation_cost: 0.0
+
+recognizers:
+  default:
+    PassChecker:
+      distance: 0.0
+    DistanceChecker:
+      distance: 0.2
+  sub:
+    All:
+      PassChecker:
+        distance: -0.2
+      DistanceChecker:
+        distance: 0.5
+  explicit:
+    PassChecker:
+      distance: 0.0
+    DistanceChecker:
+      distance: 0.05
+  force_recovery:
+    TimeChecker:
+      limit: 120.0
+      interval: 120.0
+
+state_to_global_planner:
+  move: carrot_planner
+  safety_stop: ompl_planner
+  stuck: carrot_planner
+  avoid: carrot_planner_avoid
+  approach: carrot_planner
+  approach_recovery: carrot_planner
+  fast: carrot_planner
+  waiting: carrot_planner
+  stuck_recovery: carrot_planner
+state_to_local_planner:
+  move: dwa_planner
+  safety_stop: stop_planner
+  stuck: stop_planner
+  avoid: dwa_planner_avoid
+  approach: dwa_planner_approach
+  approach_recovery: dwa_planner_approach
+  fast: dwa_planner_fast
+  waiting: stop_planner
+  stuck_recovery: dwa_planner_recovery
+
+global_planners:
+  carrot_planner:
+    type: CarrotPlanner
+    costmap: robot_costmap
+    passable_check_length: 2
+  carrot_planner_avoid:
+    type: CarrotPlanner
+    costmap: robot_costmap
+    passable_check_length: 0
+  ompl_planner:
+    type: OmplPlanner
+    costmap: robot_costmap
+    goal_lookahead: 2
+    subgoal_distance: 0.2
+    calc_time: 1.0
+    default_road_width: 0.5
+
+local_planners:
+  stop_planner:
+    type: StopPlanner
+    costmap: robot_costmap
+  dwa_planner:
+    type: DWAPlanner
+    costmap: robot_costmap
+    dt: 0.1
+    heading_lookahead: 0.015
+    predict_time: 1.0
+    predict_time_lethal: 2.0
+    default_road_width: 0.5
+    heading_lethal_angle: 3.14 # disable
+    linear_motion_config:
+      max_speed: 0.5
+      min_speed: 0.05
+      max_accel: 2.5
+      samples: 20
+    angular_motion_config:
+      max_speed: 0.2
+      min_speed: -0.2
+      max_accel: 1.5
+      samples: 10
+    speed_cost_config:
+      gain: 0.1
+    obstacle_cost_config:
+      gain: 0.1
+    goal_cost_config:
+      gain: 3.0
+      max_cost: 100.0
+    angular_speed_cost_config:
+      gain: 0.0
+    heading_cost_config:
+      gain: 0.0
+  dwa_planner_fast:
+    type: DWAPlanner
+    costmap: robot_costmap
+    dt: 0.1
+    heading_lookahead: 0.015
+    predict_time: 1.0
+    predict_time_lethal: 2.0
+    default_road_width: 0.5
+    heading_lethal_angle: 3.14 # disable
+    linear_motion_config:
+      max_speed: 0.8
+      min_speed: 0.05
+      max_accel: 2.5
+      samples: 20
+    angular_motion_config:
+      max_speed: 0.2
+      min_speed: -0.2
+      max_accel: 1.5
+      samples: 10
+    speed_cost_config:
+      gain: 0.1
+    obstacle_cost_config:
+      gain: 0.1
+    goal_cost_config:
+      gain: 3.0
+      max_cost: 100.0
+    angular_speed_cost_config:
+      gain: 0.0
+    heading_cost_config:
+      gain: 0.0
+  dwa_planner_avoid:
+    type: DWAPlanner
+    costmap: robot_costmap
+    dt: 0.1
+    heading_lookahead: 0.015
+    predict_time: 3.0
+    predict_time_lethal: 3.5
+    default_road_width: 0.5
+    heading_lethal_angle: 3.14 # disable
+    linear_motion_config:
+      max_speed: 0.1
+      min_speed: 0.0
+      max_accel: 2.5
+      samples: 10
+    angular_motion_config:
+      max_speed: 2.0
+      min_speed: -2.0
+      max_accel: 3.14
+      samples: 20
+    speed_cost_config:
+      gain: 1.0
+    obstacle_cost_config:
+      gain: 0.1
+    goal_cost_config:
+      gain: 5.0
+      max_cost: 100.0
+    angular_speed_cost_config:
+      gain: 0.0
+    heading_cost_config:
+      gain: 0.0
+  dwa_planner_approach:
+    type: DWAPlanner
+    costmap: robot_costmap
+    dt: 0.1
+    heading_lookahead: 0.015
+    predict_time: 3.0
+    predict_time_lethal: 3.5
+    default_road_width: 0.5
+    heading_lethal_angle: 3.14 # disable
+    linear_motion_config:
+      max_speed: 0.1
+      min_speed: 0.0
+      max_accel: 2.5
+      samples: 10
+    angular_motion_config:
+      max_speed: 1.0
+      min_speed: -1.0
+      max_accel: 1.5
+      samples: 20
+    speed_cost_config:
+      gain: 1.0
+    obstacle_cost_config:
+      gain: 0.1
+    goal_cost_config:
+      gain: 5.0
+      max_cost: 100.0
+    angular_speed_cost_config:
+      gain: 0.0
+    heading_cost_config:
+      gain: 0.0
+  dwa_planner_recovery:
+    type: DWAPlanner
+    costmap: robot_costmap
+    dt: 0.1
+    heading_lookahead: 0.1
+    predict_time: 1.0
+    predict_time_lethal: 1.5
+    default_road_width: 0.5
+    heading_lethal_angle: 3.14 # disable
+    linear_motion_config:
+      max_speed: 0.1
+      min_speed: -0.1
+      max_accel: 2.5
+      samples: 10
+    angular_motion_config:
+      max_speed: 1.0
+      min_speed: -1.0
+      max_accel: 1.5
+      samples: 20
+    speed_cost_config:
+      gain: 1.0
+    obstacle_cost_config:
+      gain: 1.0
+    goal_cost_config:
+      gain: 0.0
+    angular_speed_cost_config:
+      gain: 0.0
+    heading_cost_config:
+      gain: 0.0
+
+state_machine:
+  states:
+    - move # trace trajectory
+    - avoid # obstacle avoidance
+    - approach_recovery # approach to nearest point of goal
+    - approach
+    - fast
+    - safety_stop
+    - stuck
+    - waiting
+    - stuck_recovery
+  transitions:
+    # passable
+    - trigger: goalImpassable
+      source: move
+      dest: safety_stop
+    - trigger: goalPassable
+      source: safety_stop
+      dest: move
+    # special motions (safety_stop is disabled)
+    - trigger: slowSpeed
+      source: move
+      dest: approach
+    - trigger: fastSpeed
+      source: move
+      dest: fast
+    - trigger: normalSpeed
+      source: fast
+      dest: move
+    - trigger: normalSpeed
+      source: approach
+      dest: move
+    # avoidable
+    - trigger: avoidable
+      source: safety_stop
+      dest: avoid
+    - trigger: unavoidable
+      source: avoid
+      dest: safety_stop
+    - trigger: subgoalsAchieved
+      source: avoid
+      dest: move
+    - trigger: subgoalPassable
+      source: safety_stop
+      dest: avoid
+    - trigger: subgoalImpassable
+      source: avoid
+      dest: safety_stop
+    # safety_stop recovery ("approach to nearest point of goal" recovery behavior)
+    - trigger: recoverable
+      source: safety_stop
+      dest: approach_recovery
+    - trigger: goalPassable
+      source: approach_recovery
+      dest: move
+    - trigger: goalAchieved
+      source: approach_recovery
+      dest: safety_stop
+    - trigger: avoidable
+      source: approach_recovery
+      dest: avoid
+    - trigger: isStuck
+      source: approach_recovery
+      dest: stuck_recovery
+    # stuck, stuck recovery (stuck means "geometric planning is not computable", "force move" recovery behavior)
+    - trigger: isStuck
+      source: avoid
+      dest: stuck_recovery
+    - trigger: isStuck
+      source: safety_stop
+      dest: stuck_recovery
+    - trigger: recoverable
+      source: stuck
+      dest: stuck_recovery
+    - trigger: stuckRecovered
+      source: stuck_recovery
+      dest: safety_stop
+    # for wait task
+    - trigger: wait
+      source: "*"
+      dest: waiting
+    - trigger: start
+      source: "*"
+      dest: move
+  initial: waiting
+state_publish_rate: 5.0
+
+handlers:
+  robot_costmap:
+    type: GridMap2DHandler
+  global_costmap:
+    type: GridMap2DHandler
+  common_msg:
+    type: CommonMsgHandler
+  goal:
+    type: GoalHandler
+  subgoal:
+    type: GoalHandler
+  local_plan:
+    type: PlanHandler
+  global_plan:
+    type: PlanHandler
+
+listeners:
+  force_recovery:
+    type: ForceRecoveryListener
+  current_goal:
+    type: CurrentGoalListener
+  point_cloud:
+    type: PointCloudListener
+  goal_topic:
+    type: GoalTopicListener
+    handler: goal
+  trigger:
+    type: TriggerListener
+  pose_update:
+    type: PoseUpdateListener
+  odom:
+    type: OdomListener
+  state_machine:
+    type: StateMachineListener
+  robot_costmap:
+    type: GridMap2DListener
+    topic: ~robot_costmap
+    handler: robot_costmap
+  global_costmap:
+    type: GridMap2DListener
+    topic: ~global_costmap
+    handler: global_costmap
+  local_plan:
+    type: PlanListener
+    topic: ~local_plan
+    handler: local_plan
+    frame_id: map
+  global_plan:
+    type: PlanListener
+    topic: ~global_plan
+    handler: global_plan
+    frame_id: map
+  goal:
+    type: GoalListener
+    handler: goal
+  subgoal:
+    type: GoalListener
+    handler: subgoal
+
+observers:
+  force_recovery:
+    type: RecognizerObserver
+    recognizer: force_recovery
+    check_frequency: 1.0
+  control_frequency:
+    type: PeriodicObserver
+    rate: 20.0
+  visualize_frequency:
+    type: PeriodicObserver
+    rate: 5.0
+  point_cloud:
+    type: PointCloudObserver
+  goal:
+    type: GoalObserver
+  odom:
+    type: OdomObserver
+  trigger:
+    type: TriggerObserver
+  pose:
+    type: PoseObserver
+    robot_frame_id: base_link
+add_listener:
+  force_recovery:
+    - force_recovery
+  control_frequency:
+    - current_goal
+    - state_machine
+  visualize_frequency:
+    - robot_costmap
+    - global_costmap
+    - local_plan
+    - global_plan
+    - goal
+    - subgoal
+  point_cloud:
+    - point_cloud
+  goal:
+    - goal_topic
+  odom:
+    - odom
+  trigger:
+    - trigger
+  pose:
+    - pose_update

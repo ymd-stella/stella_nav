@@ -1,0 +1,8 @@
+<launch>
+  <arg name="config" default="$(find stella_nav_launch)/config.yaml"/>
+  <arg name="goal" default=""/>
+  <include file="$(find stella_nav_launch)/launch/navigation_only.launch">
+    <arg name="config" value="$(arg config)"/>
+    <arg name="goal" value="$(arg goal)"/>
+  </include>
+</launch>

@@ -1,0 +1,49 @@
+<launch>
+  <node pkg="map_server" name="map_server" type="map_server" args="demopro.yaml"/>
+  <node pkg="amcl" name="amcl" type="amcl">
+    <param name="odom_frame_id" value="odom"/>
+    <param name="global_frame_id" value="map"/>
+    <param name="odom_model_type" value="diff_correct"/>
+    <param name="transform_tolerance" value="1.0" />
+    <param name="gui_publish_rate" value="10"/>
+    <param name="laser_max_beams" value="30"/>
+    <param name="min_particles" value="300"/>
+    <param name="max_particles" value="1000"/>
+    <param name="kld_err" value="0.05"/>
+    <param name="kld_z" value="0.99"/>
+    <param name="initial_pose_x" value="0.0"/>
+    <param name="initial_pose_y" value="0.0"/>
+    <param name="initial_pose_a" value="0.0"/>
+    <param name="initial_cov_xx" value="0.05"/>
+    <param name="initial_cov_yy" value="0.01"/>
+    <param name="initial_cov_aa" value="0.10"/>
+    <param name="odom_alpha1" value="1.2"/>
+    <param name="odom_alpha2" value="1.2"/>
+    <param name="odom_alpha3" value="1.2"/>
+    <param name="odom_alpha4" value="1.2"/>
+    <!-- <param name="odom_alpha5" value="0.1"/> -->
+    <param name="laser_z_hit" value="0.95"/>
+    <!-- <param name="laser_z_short" value="0.05"/> -->
+    <!-- <param name="laser_z_max" value="0.05"/> -->
+    <param name="laser_z_rand" value="0.05"/>
+    <param name="laser_sigma_hit" value="0.2"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_model_type" value="likelihood_field"/>
+    <param name="laser_likelihood_max_dist" value="0.5"/>
+    <param name="update_min_d" value="0.05"/>
+    <param name="update_min_a" value="0.10"/> <!-- 0.017[rad] == 1[deg] -->
+    <param name="resample_interval" value="1"/>
+    <param name="recovery_alpha_slow" value="0.0"/>
+    <param name="recovery_alpha_fast" value="0.0"/>
+  </node>
+  <node pkg="urg_node" name="urg_node" type="urg_node">
+    <param name="serial_port" value="/dev/serial/by-id/usb-Hokuyo_Data_Flex_for_USB_URG-Series_USB_Driver-if00"/>
+    <param name="angle_min" value="-2.08621382713"/>
+    <param name="angle_max" value="2.08621382713"/>
+  </node>
+  <node pkg="ypspur_ros_bridge" type="ypspur_ros_bridge" name="ypspur_ros_bridge"/>
+
+  <include file="$(find stella_nav_launch)/launch/scan_to_cloud.launch"/>
+  <include file="$(find stella_nav_launch)/launch/tf2.launch"/>
+  <include file="$(find stella_nav_launch)/launch/rviz.launch"/>
+</launch>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>stella_nav</name>
+  <version>0.0.0</version>
+  <description>Navigation System witten in Python (and Cython)</description>
+  <maintainer email="world.applepie@gmail.com">ymd-stella</maintainer>
+  <license>BSD</license>
+  <author >ymd-stella</author>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>stella_nav_core</exec_depend>
+  <exec_depend>stella_nav_launch</exec_depend>
+  <export>
+    <metapackage/>
+  </export>
+</package>

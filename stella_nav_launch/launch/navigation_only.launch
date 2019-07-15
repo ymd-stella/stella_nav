@@ -1,0 +1,12 @@
+<launch>
+  <arg name="config" default="$(find stella_nav_core)/config.yaml"/>
+  <arg name="goal" default=""/>
+  <node pkg="stella_nav_core" type="stella_nav_node.py" name="stella_nav" output="screen" clear_params="true">
+    <rosparam command="load" file="$(arg config)"/>
+    <param name="handlers/goal/goals_filepath" value="$(arg goal)"/>
+    <remap from="~odom" to="odom"/>
+    <remap from="~cloud" to="cloud"/>
+    <remap from="~cmd_vel" to="cmd_vel"/>
+    <remap from="~trigger" to="trigger"/>
+  </node>
+</launch>

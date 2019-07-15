@@ -116,4 +116,8 @@ flycheck*
 
 # docker
 docker/home/*
-!docker/home/.bashrc
+!docker/home/catkin_ws
+docker/home/catkin_ws/*
+!docker/home/catkin_ws/src
+docker/home/catkin_ws/src/*
+!.gitkeep

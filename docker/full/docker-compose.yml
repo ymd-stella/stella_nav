@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  stella_nav:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - user_name=${USER_NAME}
+        - group_name=${GROUP_NAME}
+        - user_id=${USER_ID}
+        - group_id=${GROUP_ID}
+    environment:
+      - ROS_DISTRO=kinetic
+      - XAUTHORITY=${XAUTH}
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - USER_NAME=${USER_NAME}
+    user: ${USER_ID}:${GROUP_ID}
+    network_mode: host
+    group_add:
+      - video
+      - sudo
+    privileged: true
+    devices:
+      - "/dev/dri:/dev/dri"
+    volumes:
+      - "${XSOCK}:${XSOCK}:rw"
+      - "${XAUTH}:${XAUTH}:rw"
+      - "${XDG_RUNTIME_DIR}=${XDG_RUNTIME_DIR}"
+      - "${PWD}/../home:/home/${USER_NAME}"
+      - "${PWD}/../..:/home/${USER_NAME}/catkin_ws/src/stella_nav"
+      - "/home/${USER_NAME}/catkin_ws/src/stella_nav/docker"
