@@ -14,6 +14,10 @@ cd stella_nav/docker/minimal
 
 ## Demo
 ```
+tmux
+```
+Divide the window into 4 and execute the following command in each window.
+```
 roslaunch stella_nav_launch simulation.launch
 roslaunch stella_nav_launch navigation.launch config:=${HOME}/catkin_ws/src/stella_nav/stella_nav_launch/samples/config.yaml.sample goal:=${HOME}/catkin_ws/src/stella_nav/stella_nav_launch/samples/goals.yaml.sample
 roslaunch stella_nav_launch rviz.launch
