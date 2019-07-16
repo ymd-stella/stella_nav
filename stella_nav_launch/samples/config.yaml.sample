@@ -237,6 +237,8 @@ local_planners:
       gain: 0.0
 
 state_machine:
+  draw_file: ""
+  draw_prog: dot
   states:
     - move # trace trajectory
     - avoid # obstacle avoidance
@@ -321,7 +323,6 @@ state_machine:
       source: "*"
       dest: move
   initial: waiting
-state_publish_rate: 5.0
 
 handlers:
   robot_costmap:

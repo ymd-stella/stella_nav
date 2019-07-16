@@ -19,6 +19,8 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6
     libeigen3-dev \
     libboost-dev \
     libode-dev \
+    nomacs \
+    graphviz-dev \
     ros-kinetic-tf \
     ros-kinetic-tf2 \
     ros-kinetic-sensor-msgs \
@@ -41,7 +43,7 @@ RUN wget https://ompl.kavrakilab.org/install-ompl-ubuntu.sh \
     && chmod u+x install-ompl-ubuntu-mod.sh \
     && ./install-ompl-ubuntu-mod.sh
 
-RUN pip install cython transitions && \
+RUN pip install cython transitions pygraphviz && \
     pip install --upgrade numpy
 
 ARG group_id
