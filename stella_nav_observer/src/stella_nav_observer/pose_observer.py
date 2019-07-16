@@ -43,7 +43,7 @@ class PoseObserver(Observer):
         try:
             transform = self.tf_buffer.lookup_transform(self._fixed_frame_id, self._robot_frame_id, rospy.Time(0), rospy.Duration(0.01))
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException, rospy.ROSInterruptException) as e:
-            rospy.logwarn("PoseObserver get Exception: {}".format(e))
+            rospy.logwarn_throttle(5, "PoseObserver get Exception: {}".format(e))
             return None
         if transform:
             pose = tf2_geometry_msgs.do_transform_pose(PoseObserver.identical_pose, transform)
