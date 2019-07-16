@@ -17,6 +17,7 @@ services:
       - QT_X11_NO_MITSHM=1
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
       - USER_NAME=${USER_NAME}
+      - TERM=xterm-256color
     user: ${USER_ID}:${GROUP_ID}
     network_mode: host
     group_add:
