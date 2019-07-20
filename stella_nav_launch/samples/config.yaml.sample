@@ -92,7 +92,7 @@ local_planners:
     dt: 0.1
     heading_lookahead: 0.015
     predict_time: 1.0
-    predict_time_lethal: 2.0
+    search_level: 1
     default_road_width: 0.5
     heading_lethal_angle: 3.14 # disable
     linear_motion_config:
@@ -122,7 +122,7 @@ local_planners:
     dt: 0.1
     heading_lookahead: 0.015
     predict_time: 1.0
-    predict_time_lethal: 2.0
+    search_level: 1
     default_road_width: 0.5
     heading_lethal_angle: 3.14 # disable
     linear_motion_config:
@@ -152,7 +152,7 @@ local_planners:
     dt: 0.1
     heading_lookahead: 0.015
     predict_time: 3.0
-    predict_time_lethal: 3.5
+    search_level: 1
     default_road_width: 0.5
     heading_lethal_angle: 3.14 # disable
     linear_motion_config:
@@ -182,7 +182,7 @@ local_planners:
     dt: 0.1
     heading_lookahead: 0.015
     predict_time: 3.0
-    predict_time_lethal: 3.5
+    search_level: 1
     default_road_width: 0.5
     heading_lethal_angle: 3.14 # disable
     linear_motion_config:
@@ -212,7 +212,7 @@ local_planners:
     dt: 0.1
     heading_lookahead: 0.1
     predict_time: 1.0
-    predict_time_lethal: 1.5
+    search_level: 1
     default_road_width: 0.5
     heading_lethal_angle: 3.14 # disable
     linear_motion_config:
