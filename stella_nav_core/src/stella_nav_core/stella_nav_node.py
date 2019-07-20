@@ -158,7 +158,9 @@ def profile():
     # yappi.set_clock_type("WALL")
     yappi.start()
     main()
-    yappi.get_func_stats().strip_dirs().sort("tsub").print_all()
+    columns = {0:("name",80), 1:("ncall", 5), 2:("tsub", 8), 3:("ttot", 8), 4:("tavg",8)}
+    with open("yappi_prof.txt", "w") as of:
+        yappi.get_func_stats().strip_dirs().sort("tsub").print_all(out=of, columns=columns)
     yappi.get_thread_stats().print_all()
 
 if __name__ == '__main__':
