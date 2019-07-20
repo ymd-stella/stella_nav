@@ -162,5 +162,8 @@ def profile():
     yappi.get_thread_stats().print_all()
 
 if __name__ == '__main__':
-    main()
-    # profile()
+    use_profiler = rospy.get_param("use_profiler", False)
+    if use_profiler:
+        profile()
+    else:
+        main()
