@@ -1,3 +1,4 @@
+#cython: language_level=2
 cimport ompl
 from libcpp.memory cimport shared_ptr, make_shared, static_pointer_cast
 from libcpp.vector cimport vector
