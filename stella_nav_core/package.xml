@@ -4,7 +4,7 @@
   <version>0.0.0</version>
   <description>The stella_nav core package</description>
   <maintainer email="world.applepie@gmail.com">ymd-stella</maintainer>
-  <license>BSD</license>
+  <license>MIT</license>
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
