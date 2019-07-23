@@ -1,7 +1,7 @@
 #!/bin/bash
 source /opt/ros/kinetic/setup.bash
-export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/home/$HOME/ORB_SLAM2/Examples/ROS
-source /home/$HOME/catkin_ws/devel/setup.bash
+export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$HOME/ORB_SLAM2/Examples/ROS
+source $HOME/catkin_ws/devel/setup.bash
 
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 HISTSIZE=50000
