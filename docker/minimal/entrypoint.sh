@@ -8,14 +8,12 @@ if [ ! -e ${HOME}/.bashrc_profile ]; then
     echo ". ${HOME}/.bashrc" >> ${HOME}/.bash_profile
 fi
 
-if [ ! -e ${HOME}/catkin_ws/src/CMakeLists.txt ]; then
+if [ ! -e ${HOME}/ros2_ws/install ]; then
     source /opt/ros/${ROS_DISTRO}/setup.bash
-    mkdir -p catkin_ws/src
-    cd catkin_ws/src
-    catkin_init_workspace
-    cd ..
-    catkin_make
-    source devel/setup.bash
+    mkdir -p ros2_ws/src
+    cd ros2_ws/
+    colcon build --symlink-install
+    source install/setup.bash
     cd ..
 fi
 

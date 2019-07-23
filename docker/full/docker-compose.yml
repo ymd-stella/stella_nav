@@ -10,8 +10,9 @@ services:
         - group_name=${GROUP_NAME}
         - user_id=${USER_ID}
         - group_id=${GROUP_ID}
+        - ROS_DISTRO=dashing
     environment:
-      - ROS_DISTRO=kinetic
+      - ROS_DISTRO=dashing
       - XAUTHORITY=${XAUTH}
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
@@ -31,5 +32,5 @@ services:
       - "${XAUTH}:${XAUTH}:rw"
       - "${XDG_RUNTIME_DIR}=${XDG_RUNTIME_DIR}"
       - "${PWD}/../home:/home/${USER_NAME}"
-      - "${PWD}/../..:/home/${USER_NAME}/catkin_ws/src/stella_nav"
-      - "/home/${USER_NAME}/catkin_ws/src/stella_nav/docker"
+      - "${PWD}/../..:/home/${USER_NAME}/ros2_ws/src/stella_nav"
+      - "/home/${USER_NAME}/ros2_ws/src/stella_nav/docker"

@@ -1,6 +1,15 @@
-FROM ros:kinetic
+FROM ubuntu:bionic
+RUN echo 'Etc/UTC' > /etc/timezone && \
+    ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -q -y tzdata gnupg2 lsb-release && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG ROS_DISTRO
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+    sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list' && \
     apt-get update && apt-get install -y \
+    ros-${ROS_DISTRO}-desktop \
     x11-apps \
     tmux \
     build-essential \
@@ -19,19 +28,14 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6
     libeigen3-dev \
     libboost-dev \
     libode-dev \
-    ros-kinetic-tf \
-    ros-kinetic-tf2 \
-    ros-kinetic-sensor-msgs \
-    ros-kinetic-rviz \
-    ros-kinetic-rqt-plot \
-    ros-kinetic-jsk-visualization \
-    ros-kinetic-turtlebot3-description \
-    ros-kinetic-turtlebot3-gazebo \
-    ros-kinetic-robot-state-publisher \
-    ros-kinetic-laser-filters \
-    ros-kinetic-xacro \
-    ros-kinetic-gazebo-ros-pkgs \
-    ros-kinetic-ros-numpy \
+    nomacs \
+    graphviz-dev \
+    python3-colcon-common-extensions \
+    ros-${ROS_DISTRO}-tf2 \
+    ros-${ROS_DISTRO}-sensor-msgs \
+    ros-${ROS_DISTRO}-rqt-plot \
+    ros-${ROS_DISTRO}-robot-state-publisher \
+    ros-${ROS_DISTRO}-gazebo-ros-pkgs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -41,8 +45,8 @@ RUN wget https://ompl.kavrakilab.org/install-ompl-ubuntu.sh \
     && chmod u+x install-ompl-ubuntu-mod.sh \
     && ./install-ompl-ubuntu-mod.sh --python
 
-RUN pip install cython transitions && \
-    pip install --upgrade numpy
+RUN pip3 install cython transitions pkgconfig && \
+    pip3 install --upgrade numpy
 
 ARG group_id
 ARG group_name
