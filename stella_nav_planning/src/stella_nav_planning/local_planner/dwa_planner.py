@@ -1,12 +1,13 @@
 import threading
 import numpy as np
 import time
-import rospy
+import rclpy
 from sensor_msgs import point_cloud2
 from std_msgs.msg import Header
 from sensor_msgs.msg import PointCloud2, PointField
 from stella_nav_core.geometry_utils import GeometryUtils
 from stella_nav_core.config import CostConfig, MotionConfig
+from stella_nav_core.stella_nav_node import get_node
 
 
 class State(object):
@@ -55,9 +56,9 @@ class DWAPlanner(object):
         self._heading_lethal_angle = heading_lethal_angle
         self._costmaps = costmaps
         self._costmap = costmaps[costmap]
-        self._cost_pub = rospy.Publisher("~dwa_planner/cost_cloud", PointCloud2, queue_size=1)
-        self._lethal_cost_pub = rospy.Publisher("~dwa_planner/lethal_cost_cloud", PointCloud2, queue_size=1)
-        self._rotation_cost_pub = rospy.Publisher("~dwa_planner/rotation_cost_cloud", PointCloud2, queue_size=1)
+        self._cost_pub = get_node().create_publisher(PointCloud2, "~dwa_planner/cost_cloud", rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
+        self._lethal_cost_pub = get_node().create_publisher(PointCloud2, "~dwa_planner/lethal_cost_cloud", rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
+        self._rotation_cost_pub = get_node().create_publisher(PointCloud2, "~dwa_planner/rotation_cost_cloud", rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
         self._fields = [
             PointField(name="x", offset=0, datatype=PointField.FLOAT32, count=1),
             PointField(name="y", offset=4, datatype=PointField.FLOAT32, count=1),
@@ -202,8 +203,8 @@ class DWAPlanner(object):
             self._cost_pub.publish(cost_msg)
             self._lethal_cost_pub.publish(lethal_cost_msg)
             self._rotation_cost_pub.publish(rotation_cost_msg)
-        except rospy.ROSException as e:
-            rospy.logdebug("DWAPlanner: {}".format(e))
+        except RuntimeError as e:
+            rclpy.logdebug("DWAPlanner: {}".format(e))
 
     def plan(self, pose, goal):
         self.lock.acquire()

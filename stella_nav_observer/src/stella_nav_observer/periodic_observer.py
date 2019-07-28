@@ -1,6 +1,7 @@
-import rospy
+import rclpy
 import threading
 from .observer import Observer
+from stella_nav_core.stella_nav_node import get_node
 
 
 class PeriodicObserver(Observer):
@@ -8,17 +9,7 @@ class PeriodicObserver(Observer):
         super(PeriodicObserver, self).__init__(**kwargs)
         if rate is None or rate <= 0:
             raise ValueError("invalid rate")
-        self._rate = rospy.Rate(rate)
-        self._worker = threading.Thread(target=self._dispatch_event, name="current_goal_observer")
-        self._worker.start()
-
-    def join(self):
-        self._worker.join()
+        self._timer = get_node().create_timer(1.0/rate, self._dispatch_event)
 
     def _dispatch_event(self):
-        while not rospy.is_shutdown():
-            self._call_event(msg=None)
-            try:
-                self._rate.sleep()
-            except rospy.ROSInterruptException as e:
-                rospy.logdebug("PeriodicObserver: {}".format(e))
+        self._call_event(msg=None)

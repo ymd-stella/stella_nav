@@ -1,9 +1,10 @@
 import threading
-import rospy
+import rclpy
 from geometry_msgs.msg import PoseStamped, Vector3, Twist
 import time
 import numpy as np
 import copy
+from stella_nav_core.stella_nav_node import get_node
 
 
 class Navigation(threading.Thread):
@@ -17,9 +18,10 @@ class Navigation(threading.Thread):
         self._plan_handlers = plan_handlers
         self._global_costmap_handler = global_costmap_handler
         self._pose = None
-        self._cmd_vel_pub = rospy.Publisher("~cmd_vel", Twist, queue_size=1)
+        self._cmd_vel_pub = get_node().create_publisher(Twist, "~cmd_vel", rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
         self._controller_frequency = controller_frequency
-        self._planning_rate = rospy.Rate(controller_frequency)
+        self._sleep_dur = 1.0/controller_frequency
+        self._timer = get_node().create_timer(self._sleep_dur, self._work)
         self._state_to_local_planner = state_to_local_planner
         self._state_to_global_planner = state_to_global_planner
         self._state_machine = state_machine
@@ -75,10 +77,10 @@ class Navigation(threading.Thread):
         achievement_recognizer_sub = self._recognizers["sub"]
         result, reason = achievement_recognizer_sub.detect(pose, subgoal)
         if result:
-            rospy.loginfo("subgoal was achieved ({}, {})".format(achievement_recognizer_sub.desc, reason))
+            get_node().get_logger().info("subgoal was achieved ({}, {})".format(achievement_recognizer_sub.desc, reason))
             is_end, _ = self._subgoal_handler.achieve()
             if is_end:
-                rospy.loginfo("all subgoals was achieved")
+                get_node().get_logger().info("all subgoals was achieved")
                 self._subgoal_handler.clear()
                 triggers.append("subgoalsAchieved")
         return subgoal, triggers
@@ -106,34 +108,29 @@ class Navigation(threading.Thread):
         achievement_recognizer = self._recognizers[goal.data.get("recognizer", "default")]
         result, reason = achievement_recognizer.detect(pose, goal)
         if result:
-            rospy.loginfo("goal was achieved (Recognizer: {}, Reasons: {})".format(achievement_recognizer.desc, reason))
+            get_node().get_logger().info("goal was achieved (Recognizer: {}, Reasons: {})".format(achievement_recognizer.desc, reason))
             cmd_vel = self._achieve()
         else:
             cmd_vel = self._plan(pose, goals, goal_idx)
         return cmd_vel
 
-    def run(self):
-        while not rospy.is_shutdown():
-            start_time = rospy.Time.now()
+    def _work(self):
+        start_time = get_node().get_clock().now()
 
-            pose = self.pose()
-            goal_idx = self._goal_handler.get_current_goal_idx()
-            goals = self._goal_handler.get_goals()
-            if pose is None or goal_idx is None:
-                cmd_vel = Twist(linear=Vector3(x=0, y=0, z=0), angular=Vector3(x=0, y=0, z=0))
-            else:
-                cmd_vel = self._navigate(pose, goals, goal_idx)
+        pose = self.pose()
+        goal_idx = self._goal_handler.get_current_goal_idx()
+        goals = self._goal_handler.get_goals()
+        if pose is None or goal_idx is None:
+            cmd_vel = Twist(linear=Vector3(x=0, y=0, z=0), angular=Vector3(x=0, y=0, z=0))
+        else:
+            cmd_vel = self._navigate(pose, goals, goal_idx)
 
-            if cmd_vel is not None:
-                try:
-                    self._cmd_vel_pub.publish(cmd_vel)
-                except rospy.ROSException as e:
-                    rospy.logdebug("Navigation: {}".format(e))
-
-            dur = rospy.Time.now() - start_time
-            if dur > self._planning_rate.sleep_dur:
-                rospy.logwarn("Control loop took {:.4f} seconds (desired rate is {} Hz)".format(dur.to_sec(), self._controller_frequency))
+        if cmd_vel is not None:
             try:
-                self._planning_rate.sleep()
-            except rospy.ROSInterruptException as e:
-                rospy.logdebug("Navigation: {}".format(e))
+                self._cmd_vel_pub.publish(cmd_vel)
+            except RuntimeError as e:
+                get_node().get_logger().debug("Navigation: {}".format(e))
+
+        dur = get_node().get_clock().now() - start_time
+        if dur > self._sleep_dur:
+            get_node().get_logger().warn("Control loop took {:.4f} seconds (desired rate is {} Hz)".format(dur, self._controller_frequency))

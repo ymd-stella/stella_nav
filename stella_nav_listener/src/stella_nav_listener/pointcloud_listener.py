@@ -1,6 +1,7 @@
-import rospy
+import rclpy
 import numpy as np
 from ros_numpy import numpify
+from stella_nav_core.stella_nav_node import get_node
 
 class PointCloudListener(object):
     def __init__(self, handlers, costmaps, initial_setup, **kwargs):
@@ -12,7 +13,7 @@ class PointCloudListener(object):
         assert msg.header.frame_id == "map"
         data = numpify(msg)
         if data.size == 0:
-            rospy.logwarn("pointcloud is empty")
+            get_node().get_logger().warn("pointcloud is empty")
             return
         w = np.array(data[["x", "y"]].tolist())
         stamp = msg.header.stamp
@@ -24,4 +25,4 @@ class PointCloudListener(object):
             handler.update_costmap(costmap)
         if not self._initial_setup["obstacle"]:
             self._initial_setup["obstacle"] = True
-            rospy.loginfo("obstacle initialized")
+            get_node().get_logger().info("obstacle initialized")

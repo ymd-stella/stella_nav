@@ -1,6 +1,7 @@
-import rospy
+import rclpy
 import numpy as np
 from stella_nav_handler.goal_handler import GoalHandler
+from stella_nav_core.stella_nav_node import get_node
 
 
 class PassableChecker(object):
@@ -50,7 +51,7 @@ class PassableChecker(object):
             line = PassableChecker.bresenhamline(m1, m2)
             if np.any(costmap.get_value(line) > 0.999):
                 is_passable = False
-                rospy.logdebug("impassable", (i, poses[i]), (i+1, poses[i+1]))
+                get_node().get_logger().debug("impassable", (i, poses[i]), (i+1, poses[i+1]))
                 break
         return is_passable
 

@@ -1,9 +1,15 @@
-from distutils.core import setup
-from catkin_pkg.python_setup import generate_distutils_setup
+from setuptools import setup
 
-setup_args = generate_distutils_setup(
-    packages=["stella_nav_core"],
-    package_dir={"":"src"},
+package_name = "stella_nav_core"
+
+setup(
+    name=package_name,
+    packages=[package_name],
+    package_dir={"": "src"},
+    entry_points={
+        "console_scripts": [
+            "ros2_debug_node = stella_nav_core.ros2_debug_node:main"
+        ]
+    },
+    zip_safe=False
 )
-
-setup(**setup_args)

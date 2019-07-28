@@ -184,25 +184,6 @@ Visualization Manager:
           Topic: /stella_nav/subgoal/current_goal
           Unreliable: false
           Value: true
-        - Align Bottom: false
-          Background Alpha: 0.800000012
-          Background Color: 0; 0; 0
-          Class: jsk_rviz_plugin/OverlayText
-          Enabled: true
-          Foreground Alpha: 0.800000012
-          Foreground Color: 25; 255; 240
-          Name: OverlayText
-          Overtake Color Properties: true
-          Overtake Position Properties: true
-          Topic: /stella_nav/state_overlay
-          Value: true
-          font: DejaVu Sans Mono
-          height: 20
-          left: 0
-          line width: 2
-          text size: 12
-          top: 0
-          width: 128
         - Alpha: 1
           Arrow Length: 0.300000012
           Axes Length: 0.300000012

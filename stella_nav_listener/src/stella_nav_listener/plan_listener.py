@@ -1,9 +1,10 @@
-import rospy
+import rclpy
 import numpy as np
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
 from nav_msgs.msg import Path
 import tf
+from stella_nav_core.stella_nav_node import get_node
 
 class PlanListener(object):
     def __init__(self, handlers, handler, topic, frame_id="map", **kwargs):
@@ -11,7 +12,7 @@ class PlanListener(object):
         self._handler = handlers[handler]
         self._topic = topic
         self._frame_id = frame_id
-        self._pub = rospy.Publisher(topic, Path, queue_size=1)
+        self._pub = get_node().create_publisher(Path, topic, rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
 
     def __call__(self, msg):
         msg = Path()
@@ -26,5 +27,5 @@ class PlanListener(object):
                          for p in plan]
             try:
                 self._pub.publish(msg)
-            except rospy.ROSException as e:
-                rospy.logdebug("PlanListener: {}".format(e))
+            except RuntimeError as e:
+                get_node().get_logger().debug("PlanListener: {}".format(e))

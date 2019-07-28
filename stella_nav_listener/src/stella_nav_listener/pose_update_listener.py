@@ -1,5 +1,6 @@
-import rospy
+import rclpy
 import numpy as np
+from stella_nav_core.stella_nav_node import get_node
 
 class PoseUpdateListener(object):
     def __init__(self, navigation, observers, costmaps, initial_setup, **kwargs):
@@ -19,4 +20,4 @@ class PoseUpdateListener(object):
         self.initial_pose = msg
         if not self._initial_setup["pose"]:
             self._initial_setup["pose"] = True
-            rospy.loginfo("pose initialized")
+            get_node().get_logger().info("pose initialized")

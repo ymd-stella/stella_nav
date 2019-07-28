@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>stella_nav</name>
   <version>0.0.0</version>
   <description>Navigation System witten in Python (and Cython)</description>
   <maintainer email="world.applepie@gmail.com">ymd-stella</maintainer>
   <license>MIT</license>
-  <author >ymd-stella</author>
-  <buildtool_depend>catkin</buildtool_depend>
+  <author>ymd-stella</author>
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <exec_depend>stella_nav_core</exec_depend>
   <exec_depend>stella_nav_launch</exec_depend>
   <export>
-    <metapackage/>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

@@ -2,8 +2,9 @@ from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, Point, PoseStamped
 from .geometry_utils import GeometryUtils
-import rospy
+import rclpy
 import tf
+from stella_nav_core.stella_nav_node import get_node
 
 
 class Goal(object):
@@ -11,7 +12,7 @@ class Goal(object):
         if header is None:
             self.header = Header(
                 frame_id="map",
-                stamp=rospy.Time.now())
+                stamp=get_node().get_clock().now().to_msg())
         else:
             self.header = header
         if pose is None:

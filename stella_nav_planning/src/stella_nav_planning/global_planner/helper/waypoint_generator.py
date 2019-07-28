@@ -1,9 +1,10 @@
 import numpy as np
 from std_msgs.msg import Header
 from geometry_msgs.msg import PoseArray, Pose, Point, Quaternion, PoseStamped
-import rospy
+import rclpy
 import tf
 from stella_nav_core.goal import Goal
+from stella_nav_core.stella_nav_node import get_node
 
 
 class WaypointGenerator(object):
@@ -20,7 +21,7 @@ class WaypointGenerator(object):
                 trajectory_tmp.append(p)
         trajectory_array = np.array(trajectory_tmp)
         if trajectory_array.shape[0] < 2:
-            rospy.logwarn("trajectory is too short.")
+            get_node().get_logger().warn("trajectory is too short.")
 
         # calculate yaw
         vec = trajectory_array[1:] - np.roll(trajectory_array, 1, axis=0)[1:]

@@ -1,13 +1,14 @@
-import rospy
+import rclpy
 from nav_msgs.msg import OccupancyGrid, MapMetaData
 from geometry_msgs.msg import Pose, Point, Quaternion
 import numpy as np
+from stella_nav_core.stella_nav_node import get_node
 
 class GridMap2DListener(object):
     def __init__(self, topic, handler, handlers, **kwargs):
         super(GridMap2DListener, self).__init__()
         self._handler = handlers[handler]
-        self._pub = rospy.Publisher(topic, OccupancyGrid, queue_size=1)
+        self._pub = get_node().create_publisher(OccupancyGrid, topic, rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, depth=1))
         self._costmap = None
 
     def __call__(self, msg):
@@ -20,7 +21,7 @@ class GridMap2DListener(object):
             msg.header.frame_id = "map"
             msg.header.stamp = costmap.stamp
             msg.info = MapMetaData(
-                map_load_time=rospy.Time.now(),
+                map_load_time=get_node().get_clock().now().to_msg(),
                 resolution=resolution,
                 width=cells.shape[0],
                 height=cells.shape[1],
@@ -35,5 +36,5 @@ class GridMap2DListener(object):
             msg.data = data_out
             try:
                 self._pub.publish(msg)
-            except rospy.ROSException as e:
-                rospy.logdebug("GridMap2DListener: {}".format(e))
+            except RuntimeError as e:
+                get_node().get_logger().debug("GridMap2DListener: {}".format(e))

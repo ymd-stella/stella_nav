@@ -1,10 +1,11 @@
 import numpy as np
-import rospy
+import rclpy
 import threading
 import yaml
 import copy
 from stella_nav_core.goal import Goal
 from os.path import expanduser
+from stella_nav_core.stella_nav_node import get_node
 
 
 class GoalHandler(object):
@@ -62,7 +63,7 @@ class GoalHandler(object):
     def set_current_goal(self, idx):
         self._current_goal_idx = idx
         self._current_goal = self._goals[idx]
-        self._current_goal.header.stamp = rospy.Time.now()
+        self._current_goal.header.stamp = get_node().get_clock().now().to_msg()
 
     def is_end(self):
         return self._current_goal_idx is None

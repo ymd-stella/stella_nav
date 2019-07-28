@@ -1,4 +1,4 @@
-import rospy
+import rclpy
 import threading
 
 class PlanHandler(object):

@@ -1,7 +1,8 @@
 import numpy as np
-import rospy
+import rclpy
 import threading
 from .optimized.inflation import calc_inflation_as_image
+from stella_nav_core.stella_nav_node import get_node
 
 
 class GridMap2D(object):
@@ -18,7 +19,7 @@ class GridMap2D(object):
         self.shape = self.cells.shape
         self.resolution = resolution
         self.origin = origin
-        self.stamp = rospy.Time.now()
+        self.stamp = get_node().get_clock().now().to_msg()
         self.lock = threading.RLock()
 
     def clone(self):

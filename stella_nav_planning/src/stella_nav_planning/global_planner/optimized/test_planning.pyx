@@ -1,5 +1,5 @@
-#cython: language_level=2
-cimport ompl
+#cython: language_level=3
+from . cimport ompl
 from ompl_wrapper import *
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref

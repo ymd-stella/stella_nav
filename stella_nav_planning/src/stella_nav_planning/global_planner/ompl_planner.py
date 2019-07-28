@@ -1,8 +1,9 @@
-import rospy
+import rclpy
 import numpy as np
 from .helper import PassableChecker, WaypointGenerator
 import threading
 from .optimized.ompl_planner_impl import OmplPlannerImpl
+from stella_nav_core.stella_nav_node import get_node
 
 
 class OmplPlanner(object):
@@ -90,7 +91,7 @@ class OmplPlanner(object):
             w_goal = np.array((goal.pose.position.x, goal.pose.position.y))
             is_contained_g, m_goal = costmap.world_to_map(w_goal)
             if not (is_contained_s and is_contained_g):
-                rospy.logwarn("goal {} => {} (or start {} => {}) is not contained".format(m_goal, w_goal, m_start, w_start))
+                get_node().get_logger().warn("goal {} => {} (or start {} => {}) is not contained".format(m_goal, w_goal, m_start, w_start))
 
             # set start and goal
             self._impl.set_problem(m_start, m_goal)
@@ -100,7 +101,7 @@ class OmplPlanner(object):
             if self._impl.is_stuck():
                 triggers.append("isStuck")
             elif self._impl.is_unavoidable():
-                rospy.logdebug("add goal_lookahead_plus")
+                get_node().get_logger().debug("add goal_lookahead_plus")
                 self._goal_lookahead_plus += 1
                 triggers.append("unavoidable")
             else:
@@ -114,7 +115,7 @@ class OmplPlanner(object):
                     triggers.append("avoidable")
                 else:
                     triggers.append("unavoidable")
-            rospy.logdebug(triggers)
+            get_node().get_logger().debug(triggers)
             if not succeeded:
                 subgoals_ret = None
                 cost = None
