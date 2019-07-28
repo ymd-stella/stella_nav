@@ -362,10 +362,12 @@ listeners:
     type: GridMap2DListener
     topic: ~robot_costmap
     handler: robot_costmap
+    visualization_scale: 3
   global_costmap:
     type: GridMap2DListener
     topic: ~global_costmap
     handler: global_costmap
+    visualization_scale: 3
   local_plan:
     type: PlanListener
     topic: ~local_plan
