@@ -36,7 +36,7 @@ class PoseObserver(Observer):
     def get_pose(self):
         try:
             transform = self.tf_buffer.lookup_transform(self._fixed_frame_id, self._robot_frame_id, rclpy.Time(), rclpy.Duration(seconds=0.01))
-        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException, rclpy.ROSInterruptException) as e:
+        except (tf2_ros.TransformException, rclpy.ROSInterruptException) as e:
             get_node().get_logger().warn("PoseObserver get Exception: {}".format(e),
                 throttle_duration_sec=1)
             return None
