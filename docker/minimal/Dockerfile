@@ -36,6 +36,11 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6
     ros-${ROS_DISTRO}-rqt-plot \
     ros-${ROS_DISTRO}-robot-state-publisher \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+    ros-${ROS_DISTRO}-cartographer \
+    ros-${ROS_DISTRO}-behaviortree-cpp \
+    ros-${ROS_DISTRO}-test-interface-files \
+    ros-${ROS_DISTRO}-rcl-interfaces \
+    libsdl-dev libsdl-image1.2-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

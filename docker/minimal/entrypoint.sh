@@ -11,8 +11,14 @@ fi
 if [ ! -e ${HOME}/ros2_ws/install ]; then
     source /opt/ros/${ROS_DISTRO}/setup.bash
     mkdir -p ros2_ws/src
-    cd ros2_ws/
-    colcon build --symlink-install
+    cd ros2_ws/src
+    git clone -b ros2 https://github.com/ROBOTIS-GIT/turtlebot3.git
+    git clone -b ros2 https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+    git clone -b dashing-devel https://github.com/ros-planning/navigation2.git
+    git clone -b dashing https://github.com/ros2/cartographer_ros.git
+    git clone -b dashing https://github.com/ros2/geometry2.git
+    cd ..
+    colcon build --symlink-install --cmake-args -DBUILD_TESTING=OFF
     source install/setup.bash
     cd ..
 fi
