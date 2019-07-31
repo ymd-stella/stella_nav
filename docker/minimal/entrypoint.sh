@@ -17,6 +17,9 @@ if [ ! -e ${HOME}/ros2_ws/install ]; then
     git clone -b dashing-devel https://github.com/ros-planning/navigation2.git
     git clone -b dashing https://github.com/ros2/cartographer_ros.git
     git clone -b dashing https://github.com/ros2/geometry2.git
+    git clone -b ros2 https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+    git clone -b dashing https://github.com/ros2/geometry2.git
+    git clone -b dashing https://github.com/ros2/rviz.git
     cd ..
     colcon build --symlink-install --cmake-args -DBUILD_TESTING=OFF
     source install/setup.bash
