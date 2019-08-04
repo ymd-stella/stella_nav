@@ -12,7 +12,7 @@ def generate_launch_description():
     urdf_path = os.path.join(
         get_package_share_directory("turtlebot3_description"),
         "urdf",
-        "turtlebot3" + turtlebot3_model + ".urdf",
+        "turtlebot3_" + turtlebot3_model + ".urdf",
     )
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -23,6 +23,7 @@ def generate_launch_description():
         Node(
             package="tf2_ros",
             node_executable="static_transform_publisher",
+            node_name="static_transform_publisher",
             arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
             parameters=[{"use_sim_time": use_sim_time}],
             output="screen"),
